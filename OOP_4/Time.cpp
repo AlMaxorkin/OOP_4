@@ -36,7 +36,6 @@ Time::~Time()
 	std::cout << "\nDestructor for " << info() << std::endl;
 }
 
-
 std::string Time::info()
 {
 	 return std::to_string(hour) + ':' + std::to_string(minute) + ':' + std::to_string(second);  
@@ -90,31 +89,9 @@ void Time::subtract_seconds(int sec)
 	}
 }
 
-void Time::compare(Time &obj)
-{
-	if (hour > obj.hour)
-		std::cout << info() << " > " << obj.info();
-	
-	else if(hour < obj.hour)
-		std::cout << info() << " < " << obj.info();
-	
-	else if (minute < obj.minute)
-		std::cout << info() << " < " << obj.info();
-	
-	else if (minute > obj.minute)
-		std::cout << info() << " < " << obj.info();
-
-	else if (second < obj.second)
-		std::cout << info() << " < " << obj.info();
-	
-	else if (second > obj.second)
-		std::cout << info() << " > " << obj.info();
-	
-}
-
 int Time::seconds_conversion()
 {
-	return hour * 36000 + minute * 60 + second;
+	return hour * 3600 + minute * 60 + second;
 }
 
 int Time::minutes_conversion()
@@ -123,4 +100,92 @@ int Time::minutes_conversion()
 	if (second >= 30)
 		res++;
 	return res;
+}
+
+bool Time::operator ==(Time &obj)
+{
+	return hour == obj.hour && minute == obj.minute && second == obj.second;
+}
+
+bool Time::operator <(Time& obj)
+{
+	if (hour < obj.hour)
+		return true;
+	else if (hour > obj.hour)
+		return false;
+	
+	if (minute < obj.minute)
+		return true;
+	else if (minute > obj.minute)
+		return false;
+
+	if (second < obj.second)
+		return true;
+	else
+		return false;
+	
+}
+
+bool Time::operator >(Time& obj)
+{
+	if (hour > obj.hour)
+		return true;
+	else if (hour < obj.hour)
+		return false;
+
+	if (minute > obj.minute)
+		return true;
+	else if (minute < obj.minute)
+		return false;
+
+	if (second > obj.second)
+		return true;
+	else
+		return false;
+}
+
+bool Time::operator <=(Time& obj)
+{
+	if (hour < obj.hour)
+		return true;
+	else if (hour > obj.hour)
+		return false;
+	
+	if (minute < obj.minute)
+		return true;
+	else if (minute > obj.minute)
+		return false;
+
+	if (second < obj.second)
+		return true;
+	else if (second > obj.second)
+		return false;
+	else
+		return true;
+
+}
+
+bool Time::operator >=(Time& obj)
+{
+	if (hour > obj.hour)
+		return true;
+	else if (hour < obj.hour)
+		return false;
+
+	if (minute > obj.minute)
+		return true;
+	else if (minute < obj.minute)
+		return false;
+
+	if (second > obj.second)
+		return true;
+	else if (second < obj.second)
+		return false;
+	else
+		return true;
+}
+
+bool Time::operator !=(Time& obj)
+{
+	return !( hour == obj.hour && minute == obj.minute && second == obj.second);
 }

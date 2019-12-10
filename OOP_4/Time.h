@@ -16,8 +16,13 @@ public:
 	int difference(Time &obj);
 	void adding_seconds(int sec);
 	void subtract_seconds(int sec);
-	void compare(Time &obj);
 	int seconds_conversion();
 	int minutes_conversion();
+	bool operator == (Time&);
+	bool operator != (Time&);
+	bool operator <= (Time&);
+	bool operator >= (Time&);
+	bool operator < (Time&);
+	bool operator > (Time&);
 };
 
