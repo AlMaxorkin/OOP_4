@@ -1,50 +1,50 @@
 #include "Time.h"
 #include <iostream>
+#include <Windows.h>
+#include <string>
 
-Time::Time(char str[8])
+Time::Time(std::string str)
 {
-	char h[2] = { str[0] + str[1] };
-	hour = atoi(h);
+	std::string h = str.substr(0, 2);
+	std::string m = str.substr(3, 2);
+	std::string s = str.substr(6, 2);
 
-	char m[2] = { str[3] + str[4] };
-	minute = atoi(m);
-
-	char s[2] = { str[6] + str[7] };
-	second = atoi(s);
+	hour = atoi(h.c_str()) % 24;
+	minute = atoi(m.c_str());
+	second = atoi(s.c_str());
 }
 
 Time::Time()
 {
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	hour = st.wHour + 3;
+	minute = st.wMinute;
+	second = st.wSecond;
 
 }
 
 Time::Time(int sec)
 {
-	hour = sec / 3600;
+	hour = sec / 3600 % 24;
 	minute = sec %3600 / 60;
 	second = sec % 3600 % 60;
 }
 
 Time::~Time()
 {
-	std::cout << "Destruct";
+	std::cout << "\nDestructor for " << info() << std::endl;
 }
 
-void Time::show()
+
+std::string Time::info()
 {
-	std::cout << hour << ":" << minute << ":" << second << std::endl;  
+	 return std::to_string(hour) + ':' + std::to_string(minute) + ':' + std::to_string(second);  
 }
 
-int Time::difference(Time obj)
+int Time::difference(Time &obj)
 {
 	return abs(hour - obj.hour) * 3600 + abs(minute - obj.minute)*60 + abs(second - obj.second) ;
-}
-
-void Time::adding_seconds(int sec)
-{
-	hour += sec / 3600;
-	minute += sec % 3600 / 60;
-	second += sec % 3600 % 60;
 }
 
 void Time::adding_seconds(int sec)
@@ -52,11 +52,26 @@ void Time::adding_seconds(int sec)
 	hour += sec / 3600 % 24;
 	minute += sec % 3600 / 60;
 	second += sec % 3600 % 60;
+
+	if (second > 60)
+	{
+		minute++;
+		second = second - 60;
+	}
+	if (minute > 60)
+	{
+		hour++;
+		minute = minute - 60;
+	}
+	if (hour > 23)
+	{
+		hour = hour - 24;
+	}
 }
 
 void Time::subtract_seconds(int sec)
 {
-	hour -= sec / 3600;
+	hour -= sec / 3600 % 24;
 	minute -= sec % 3600 / 60;
 	second -= sec % 3600 % 60;
 	if (second < 0)
@@ -71,30 +86,41 @@ void Time::subtract_seconds(int sec)
 	}
 	if (hour < 0)
 	{
-		 
+		hour = 23;
 	}
 }
 
-void Time::compare(Time obj)
+void Time::compare(Time &obj)
 {
 	if (hour > obj.hour)
-	{
-		show();
-		std::cout << " > ";
-		obj.show();
-	}
-	else if(hour < obj.hour)
-	{
-		show();
-		std::cout << " < ";
-		obj.show();
-	}
-	else if (minute < obj.minute)
-	{
-		show();
-		std::cout << " < ";
-		obj.show();
-	}
-	else if (minute > obj.minute)
+		std::cout << info() << " > " << obj.info();
 	
+	else if(hour < obj.hour)
+		std::cout << info() << " < " << obj.info();
+	
+	else if (minute < obj.minute)
+		std::cout << info() << " < " << obj.info();
+	
+	else if (minute > obj.minute)
+		std::cout << info() << " < " << obj.info();
+
+	else if (second < obj.second)
+		std::cout << info() << " < " << obj.info();
+	
+	else if (second > obj.second)
+		std::cout << info() << " > " << obj.info();
+	
+}
+
+int Time::seconds_conversion()
+{
+	return hour * 36000 + minute * 60 + second;
+}
+
+int Time::minutes_conversion()
+{
+	int res = hour * 60 + minute;
+	if (second >= 30)
+		res++;
+	return res;
 }
